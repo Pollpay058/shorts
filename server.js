@@ -21,7 +21,7 @@ function createVideoWithAudio(imagePath, audioPath, outputPath) {
   return new Promise((resolve, reject) => {
     ffmpeg()
       .addInput(imagePath)
-      .loop(1)
+      .loop() // 🔁 Loop image to match entire audio duration
       .addInput(audioPath)
       .outputOptions([
         '-c:v', 'libx264',
@@ -29,7 +29,8 @@ function createVideoWithAudio(imagePath, audioPath, outputPath) {
         '-c:a', 'aac',
         '-b:a', '192k',
         '-pix_fmt', 'yuv420p',
-        '-shortest'
+        '-shortest',
+        '-movflags', '+faststart'
       ])
       .size('1080x1920')
       .on('start', cmd => console.log('FFmpeg command:', cmd))
